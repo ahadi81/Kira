@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "503580687590",
+    "project_id": "kira-d4d82",
+    "storage_bucket": "kira-d4d82.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:503580687590:android:a8245ac5e3c83e81778f27",
+        "android_client_info": {
+          "package_name": "com.ahadi.kira"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn8ZCbPcpsUvxanP7HxkFkEEQuoG5c3yo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
