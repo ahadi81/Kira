@@ -48,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ahadi.kira.navigation.ROUTE_LANDLORDHM
+import com.ahadi.kira.navigation.ROUTE_LOGIN
 import com.ahadi.kira.navigation.ROUTE_TENANTHOME
 import com.ahadi.kira.ui.theme.Blue1
 import com.ahadi.kira.ui.theme.Brown1
@@ -62,7 +63,6 @@ fun LoginScreen(navController: NavHostController,
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
 //    val context = LocalContext.current
-    val currentUserState by authViewModel.currentUser.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -157,21 +157,20 @@ fun LoginScreen(navController: NavHostController,
                         isLoading = true
                         errorMessage=null
 
-                        authViewModel.login(email,password){success, error ->
+                        authViewModel.login(email, password) { success, error, user ->
                             isLoading = false
-                            if (success){
-                                if(currentUserState?.role == "landlord"){
-                                    navController.navigate(ROUTE_LANDLORDHM){
-                                        popUpTo("login"){inclusive=true}
+                            if (success) {
+                                if (user?.role == "landlord") {
+                                    navController.navigate(ROUTE_LANDLORDHM) {
+                                        popUpTo(ROUTE_LOGIN) { inclusive = true }
                                     }
-                                }else  {
-                                    navController.navigate(ROUTE_TENANTHOME){
-                                        popUpTo ("login"){inclusive = true}
+                                } else {
+                                    navController.navigate(ROUTE_TENANTHOME) {
+                                        popUpTo(ROUTE_LOGIN) { inclusive = true }
                                     }
                                 }
-
-                            }else {
-                                errorMessage = error ?: "An unknown error occured"
+                            } else {
+                                errorMessage = error ?: "An unknown error occurred"
                             }
                         }
                     }else {

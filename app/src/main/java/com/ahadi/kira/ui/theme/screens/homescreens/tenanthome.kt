@@ -73,7 +73,8 @@ fun tenanthome(navController: NavController,
         ) {
             Column {
                 Text(
-                    text = "Hello ${userState?.firstname}! HOUSE NO:${userState?.housenum}",
+                    text = "Hello ${userState?.firstname}! " 
+                            ,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = Blue1

@@ -73,30 +73,35 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    fun login(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
+    fun login(email: String, password: String, onResult: (Boolean, String?, User?) -> Unit) {
         viewModelScope.launch {
             try {
                 val result = auth.signInWithEmailAndPassword(email, password).await()
                 val userid = result.user?.uid ?: throw Exception("Login failed!")
 
-                // NEW: Fetch profile immediately on success so the home screen has the name
-                fetchUserData(userid)
-                onResult(true, null)
+                // Fetch profile and wait for it
+                val user = fetchUserDataSync(userid)
+                _currentUser.value = user
+                onResult(true, null, user)
             } catch (e: Exception) {
-                onResult(false, e.localizedMessage)
+                onResult(false, e.localizedMessage, null)
             }
+        }
+    }
+
+    private suspend fun fetchUserDataSync(userId: String): User? {
+        return try {
+            val snapshot = db.getReference("users").child(userId).get().await()
+            snapshot.getValue(User::class.java)?.copy(id = snapshot.key ?: "")
+        } catch (e: Exception) {
+            null
         }
     }
 
     private fun fetchUserData(userId: String) {
         viewModelScope.launch {
-            try {
-                val snapshot = db.getReference("users").child(userId).get().await()
-                val user = snapshot.getValue(User::class.java)?.copy(id = snapshot.key ?: "")
-                _currentUser.value = user
-            } catch (e: Exception) {
-                _currentUser.value = null
-            }
+            val user = fetchUserDataSync(userId)
+            _currentUser.value = user
         }
     }
 
